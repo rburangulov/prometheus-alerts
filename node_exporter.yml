@@ -1,0 +1,66 @@
+groups: 
+- name: alerts\node_exporter.yml
+  rules:
+
+  - alert: Less than 100 megabytes of memory on the server
+    expr:  node_memory_MemFree_bytes/1024/1024 < 100
+    for: 5m
+    labels:
+      severity: middle
+      message: 'Less than 100 megabytes of memory on the server: {{ $labels.host }}'
+
+  - alert: Load Average above 50
+    expr: node_load1 > 50
+    for: 5m
+    labels:
+      severity: middle
+      message: 'Load Average above 50 on the server: {{ $labels.host }}'
+
+  - alert: Load Average above 100
+    expr: node_load1 > 100
+    for: 5m
+    labels:
+      severity: high
+      message: 'Load Average above 100 on the server: {{ $labels.host }}'
+
+  - alert: CPU usage above 95%
+    expr: 100 * (1 - avg by(host)(irate(node_cpu_seconds_total{mode='idle'}[5m]))) > 95
+    for: 5m
+    labels:
+      severity: middle
+      message: 'CPU usage above 95%: {{ $labels.host }}'
+
+  - alert: High IO on the server
+    expr: avg by(host)(irate(node_cpu_seconds_total{mode='iowait'}[5m])) > 30
+    for: 5m
+    labels:
+      severity: middle
+      message: 'High IO on the server: {{ $labels.host }}'
+
+  - alert: Less than 20% free disk space
+    expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 20
+    for: 5m
+    labels:
+      severity: middle
+      message: 'Less than 20% free disk space: {{ $labels.host }}'
+
+  - alert: Less than 10% free disk space
+    expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 10
+    for: 5m
+    labels:
+      severity: middle
+      message: 'Less than 10% free disk space: {{ $labels.host }}'
+
+  - alert: Less than 3% free disk space
+    expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 3
+    for: 5m
+    labels:
+      severity: high
+      message: 'Less than 3% free disk space: {{ $labels.host }}'
+
+  - alert: Less than 1% free disk space
+    expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 1
+    for: 5m
+    labels:
+      severity: high
+      message: 'Less than 1% free disk space: {{ $labels.host }}'

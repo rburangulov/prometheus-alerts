@@ -1,0 +1,9 @@
+groups: 
+- name: alerts\prometheus.yml
+  rules:
+  - alert: Prometheus exporter is unavaiable
+    expr: up == 0
+    for: 5m
+    labels:
+      severity: high
+      message: 'Prometheus exporter is unavaiable: {{ $labels.job }} - {{ $labels.instance }}'

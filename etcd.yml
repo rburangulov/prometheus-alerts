@@ -1,0 +1,17 @@
+groups: 
+- name: alerts\etcd.yml
+  rules:
+  - alert: Etcd cluster node problem
+    expr:  sum(etcd_server_has_leader) < 3
+    for: 5m
+    labels:
+      severity: high
+      message: 'Etcd cluster node problem. Cluster: {{ $labels.k8s_cluster }}'
+
+  - alert: There is no leader for Etcd cluster
+    expr: sum(etcd_server_is_leader == 1) < 1
+    for: 5m
+    labels:
+      severity: high
+      message: 'There is no leader for Etcd cluster. Cluster: {{ $labels.k8s_cluster }}'
+

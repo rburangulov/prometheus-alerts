@@ -1,0 +1,37 @@
+groups: 
+- name: alerts\kubernetes_service.yml
+  rules:
+  - alert: There are pods with Unknown status
+    expr:  kube_pod_status_phase{phase="Unknown"} > 0
+    for: 5m
+    labels:
+      severity: high
+      message: 'There are pods with Unknown status: {{ $labels.pod }}. Namespace: {{ $labels.namespace }}'
+
+  - alert: There are pods with Failed status
+    expr:  kube_pod_status_phase{phase="Failed"} > 0
+    for: 5m
+    labels:
+      severity: high
+      message: 'There are pods with Failed status: {{ $labels.pod }}. Namespace: {{ $labels.namespace }}'
+
+  - alert: There are pods with Pending status
+    expr:  kube_pod_status_phase{phase="Pending"} > 0
+    for: 5m
+    labels:
+      severity: middle
+      message: 'There are pods with Pending status: {{ $labels.pod }}. Namespace: {{ $labels.namespace }}'
+
+  - alert: There are pods with Terminated status
+    expr:  kube_pod_container_status_terminated > 0
+    for: 5m
+    labels:
+      severity: high
+      message: 'There are pods with Terminated status: {{ $labels.pod }}. Namespace: {{ $labels.namespace }}'
+
+  - alert: There are pods with Waiting status
+    expr:  kube_pod_container_status_waiting > 0
+    for: 5m
+    labels:
+      severity: high
+      message: 'There are pods with Waiting status: {{ $labels.pod }}. Namespace: {{ $labels.namespace }}'

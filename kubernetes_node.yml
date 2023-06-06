@@ -1,0 +1,45 @@
+groups: 
+- name: alerts\kubernetes_node.yml
+  rules:
+
+  - alert: There are nodes with NotReady status
+    expr:  (kube_node_status_condition{condition="Ready",status="false"} or kube_node_status_condition{condition="Ready",status="unknown"}) == 1
+    for: 5m
+    labels:
+      severity: high
+      message: 'There are nodes with NotReady status: {{ $labels.node }}'
+
+  - alert: There are nodes with OutOfDisk status
+    expr: kube_node_status_condition{condition="OutOfDisk",status="true"} > 0
+    for: 5m
+    labels:
+      severity: high
+      message: 'There are nodes with OutOfDisk status: {{ $labels.node }}'
+
+  - alert: There are nodes with NetworkUnavailable status
+    expr: kube_node_status_condition{condition="NetworkUnavailable",status="true"} > 0
+    for: 5m
+    labels:
+      severity: high
+      message: 'There are nodes with NetworkUnavailable status: {{ $labels.node }}'
+
+  - alert: There are nodes with DiskPressure status
+    expr: kube_node_status_condition{condition="DiskPressure",status="true"} > 0
+    for: 5m
+    labels:
+      severity: middle
+      message: 'There are nodes with DiskPressure status: {{ $labels.node }}'
+
+  - alert: There are nodes with MemoryPressure status
+    expr: kube_node_status_condition{condition="MemoryPressure",status="true"} > 0
+    for: 5m
+    labels:
+      severity: middle
+      message: 'There are nodes with MemoryPressure status: {{ $labels.node }}'
+ 
+  - alert: There are nodes with PIDPressure status
+    expr: kube_node_status_condition{condition="PIDPressure",status="true"} > 0
+    for: 5m
+    labels:
+      severity: middle
+      message: 'There are nodes with PIDPressure status: {{ $labels.node }}'
